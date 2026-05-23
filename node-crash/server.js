@@ -1,6 +1,8 @@
+import { error } from 'console';
 import http from 'http';
 
-const PORT = 3000;
+const PORT = process.env.PORT;
+const API = process.env.API;
 
 const server = http.createServer((req, res) => {
     // res.write('Hello thanga')
@@ -12,10 +14,47 @@ const server = http.createServer((req, res) => {
 
     // Instead of above, we can have 'writeHead'
 
-    res.writeHead(200, {'content-type' : 'application/json'} )
+    // console.log("\nurl\n",req.url)
+    // console.log("\nmethod\n",req.method)
+
+    try {
+
+        if (req.method === 'GET'){
+
+            // creating a simple router
+
+            if(req.url === "/") {
+
+                res.writeHead(200, {'content-type' : 'application/json'} )
+                res.end(JSON.stringify({message : 'From thanga'}))
+        
+            }else if(req.url === "/trustgrid") {
+        
+                res.writeHead(200, {'content-type' : 'application/json'} )
+                res.end(JSON.stringify(
+                    {message : 'For TrustGrid', reponse : "from TrustGrid"},
+                ))
+        
+            }else {
+        
+                res.writeHead(404, {'content-type' : 'text/html'} )
+                res.end('<h1> Not found </h1>')
+            } 
+        }else {
+            throw new Error('Method not allowed');
+        }
+        
+    } catch (error) {
+
+        res.writeHead(500, {'content-type' : 'text/plain'} )
+        res.end('Server Error')
+        
+    }
 
 
-    res.end(JSON.stringify({message : 'From thanga'}))
+
+
+
 })
 
 server.listen(PORT, () => {
