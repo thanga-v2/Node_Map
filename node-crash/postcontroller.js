@@ -4,5 +4,24 @@ const Post = [
     {data : 3}
 ];
 
+const dummy = [];
+
+const test = [
+    {temp:1},
+    {temp1:2}
+]
+
+const getDummy = () => dummy;
+
+const getTest = () => test;
+
 export const getPosts = () => Post;
+
+export {getDummy};
+
+
+export default getTest;
+
+
+
 

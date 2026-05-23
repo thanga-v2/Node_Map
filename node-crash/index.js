@@ -4,7 +4,7 @@
 
 // console.log(`CelciustoFahrenheit : ${celciustofahren(0)}`)
 
-import {getPosts} from './postcontroller.js' 
+import test,{getPosts} from './postcontroller.js' 
 
 console.log(`Data : ${getPosts()}`)
 
@@ -16,4 +16,6 @@ console.log(`Data : ${getPosts()}`)
 // we need JSON.stringify to solve this array of objects
 
 console.log(`For array of objects : ${JSON.stringify(getPosts())}`)
+
+console.log(`For array of objects : ${JSON.stringify(test())}`)
 
