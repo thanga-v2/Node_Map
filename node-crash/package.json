@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon --env-file=.env server",
     "thanga": "node index",
-    "simple-api" : "nodemon --env-file=.env simple-api-server"
+    "simple-api" : "nodemon --env-file=.env simple-api-server",
+    "api-with-middleware" : "nodemon --env-file=.env with-middleware"
   },
   "keywords": [],
   "author": "",
