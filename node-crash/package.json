@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon --env-file=.env server",
-    "thanga": "node index"
+    "thanga": "node index",
+    "simple-api" : "nodemon --env-file=.env simple-api-server"
   },
   "keywords": [],
   "author": "",
