@@ -7,7 +7,8 @@
     "dev": "nodemon --env-file=.env server",
     "thanga": "node index",
     "simple-api" : "nodemon --env-file=.env simple-api-server",
-    "api-with-middleware" : "nodemon --env-file=.env with-middleware"
+    "api-with-middleware" : "nodemon --env-file=.env with-middleware",
+    "clexample" : "nodemon --env-file=.env simplecallback"
   },
   "keywords": [],
   "author": "",

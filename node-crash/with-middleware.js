@@ -61,6 +61,28 @@ const NotFoundHandler = (req, res) => {
 
 }
 
+
+// Route handler for POST /api/adduser
+const createUserHandler = (req, res) => {
+
+    let body = '';
+
+// Listen for the data
+    req.on('data', (chunk) => {                 // -----> the event listens for the data
+        body += chunk.toString();
+    });
+
+    req.on('end', () => {
+        const newUser = JSON.parse(body);
+        users.push(newUser);
+        res.statusCode = 201;
+        res.write(JSON.stringify(newUser));
+        res.end();
+    })
+
+
+}
+
 const MySimpleServer = createServer((req,res) => {
 
     // we have to wrap the entire logic into middleware
@@ -105,8 +127,14 @@ const MySimpleServer = createServer((req,res) => {
             if(req.url === '/listuser' && req.method === 'GET'){
                 getUsersHandler(req, res);
             }else if(req.url.match(/\/api\/users\/([0-9]+)/) && req.method === 'GET'){
+
                 getUserByIdHandler(req, res);
-            }else {
+                
+            }else if(req.url === '/api/adduser' && req.method === 'POST') {
+
+                createUserHandler(req,res);
+            }
+            else {
                 NotFoundHandler(req, res);
             }
         })
