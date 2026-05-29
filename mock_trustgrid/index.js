@@ -1,5 +1,5 @@
 const express = require('express');
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3005;
 const mockapp = express();
 mockapp.use(express.json());
 
@@ -41,7 +41,7 @@ const trustgridVerify = async(did) => {
 }
 
 
-const issueTrsutGrid = async(holder_name, credential_type, issuer) => {
+const issueTrsutGridCred = async(holder_name, credential_type, issuer) => {
 
     const newCred = {
         did: `did:trustgrid:${Math.random().toString(36).slice(2, 10)}`,
@@ -53,8 +53,8 @@ const issueTrsutGrid = async(holder_name, credential_type, issuer) => {
 
     }
 
-    issuedCredentials.push(newCredential)  // save to mock DB
-    return newCredential()
+    issuedCredentials.push(newCred)  // save to mock DB
+    return newCred;
 
 }
 console.log(issuedCredentials[0].did)
@@ -68,14 +68,53 @@ mockapp.get('/listallcredentials', (req,res) => {
 // verify a DID
 
 mockapp.get('/api/verify/:did', async(req, res) => {
-    console.log(req.params);
-    const result = await trustgridVerify(req.params.did);
-    console.log(result);
-    res.send();
+    
+    try {                                                                                                                                                                                                                
+        const result = await trustgridVerify(req.params.did)                                                                                                                                                             
+        res.json(result)                                                                                                                                                                                                 
+    } catch (err) {                                                                                                                                                                                                      
+        res.status(404).json({ success: false, error: err.message })                                                                                                                                                     
+    }
+})
+
+mockapp.post('/api/issuecred', async(req, res) => {
+    
+    const {holder_name, credential_type, issuer} = req.body;
+
+    if (!holder_name || !credential_type || !issuer) {                                                                                                                                                                       
+        return res.status(400).json({ error: "holder_name, credential_type and issuer are required" })                                                                                                                       
+    }
+    // mock 
+    // {
+    //     "holder_name" : "thanga", 
+    //     "credential_type": "AADHAAR", 
+    //     "issuer" : "TN GOV",
+    //     "temp" : "do nothing"
+    // }
+    console.log(holder_name, credential_type, issuer);
+    const credential = await issueTrsutGridCred(holder_name, credential_type, issuer);
+
+    res.status(201).json(credential);
 })
 
 mockapp.listen(PORT, () => {
     console.log(`listening on ${PORT}`)
 })
+
+
+// localhost:3005/api/issuecred
+
+// {
+//     "holder_name" : "thanga", 
+//     "credential_type": "AADHAAR", 
+//     "issuer" : "TN GOV",
+//     "temp" : "do nothing"
+// }
+
+
+// localhost:3005/listallcredentials
+
+// localhost:3005/api/verify/did:trustgrid:xeuqescj
+
 
 
