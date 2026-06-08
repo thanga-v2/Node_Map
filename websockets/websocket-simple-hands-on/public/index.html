@@ -1,0 +1,52 @@
+<h1>Communicating with WebSockets</h1>
+<input id="msg" />
+<button id="send">Send</button>
+<div id="output"></div>
+
+<script>
+    const ws = new WebSocket('ws://localhost:3000');  
+    // WebSocket is built into ALL modern browsers — no import needed
+    // 'ws://localhost:3000' = connect to server.js -> this line IMMEDIATELY starts the handshake with server.js
+    // server.js fires its 'connection' event right now
+
+    const output = document.getElementById('output') 
+    const send   = document.getElementById('send')
+    // find HTML elements by their id attribute
+    // store references so we can use them later
+
+    send.addEventListener('click', () => {            
+    // addEventListener is an attach a callback to a click event
+    // fires every time the button is clicked
+        const msg = document.getElementById('msg').value
+        // .value = get what the user typed in the input box
+        ws.send(msg);                                
+        // ws.send() = send message over WebSocket to server.js
+        // this triggers socket.on('message') on the server
+        output.innerHTML += log('Sent', msg)
+    });
+
+    function log(event, msg) {                       
+        return '<p>' + event + ': ' + msg + '</p>'
+        // returns a string like: <p>Sent: Hello</p>
+        // we append this to the output div to show history
+    }
+
+    ws.onmessage = function(e) {     // -----> for response from the server                
+    // fires every time the SERVER sends us a message
+    // e.data = the actual message string from server
+    // fires when server.js calls socket.send('World!')
+        output.innerHTML += log('Received', e.data)
+    };
+
+    ws.onclose = function(e) {                       
+    // fires when the WebSocket connection closes
+    // e.code: 1000 = normal close, 1006 = dropped unexpectedly
+        output.innerHTML += log('Disconnected', e.code)
+    };
+
+    ws.onerror = function(e) {                       
+    // fires when there's a connection error
+    // usually followed by onclose right after
+        output.innerHTML += log('Error', e.data)
+    };
+</script>
